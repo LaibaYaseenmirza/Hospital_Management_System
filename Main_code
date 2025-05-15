@@ -1,0 +1,84 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+class Patient {
+public:
+    int id, age;
+    string name, disease;
+    void input() {
+        cout << "Enter Patient ID: "; cin >> id;
+        cin.ignore(); cout << "Enter Name: "; getline(cin, name);
+        cout << "Enter Age: "; cin >> age;
+        cin.ignore(); cout << "Enter Disease: "; getline(cin, disease);
+    }
+    void save() {
+        ofstream f("patients.txt", ios::app);
+        f << id << "," << name << "," << age << "," << disease << "\n";
+        f.close();
+        cout << "Patient added.\n";
+    }
+};
+
+class Doctor {
+public:
+    int id;
+    string name, specialty;
+    void input() {
+        cout << "Enter Doctor ID: "; cin >> id;
+        cin.ignore(); cout << "Enter Name: "; getline(cin, name);
+        cout << "Enter Specialty: "; getline(cin, specialty);
+    }
+    void save() {
+        ofstream f("doctors.txt", ios::app);
+        f << id << "," << name << "," << specialty << "\n";
+        f.close();
+        cout << "Doctor added.\n";
+    }
+};
+
+class Appointment {
+public:
+    int appId, patId, docId;
+    string date;
+    void input() {
+        cout << "Enter Appointment ID: "; cin >> appId;
+        cout << "Enter Patient ID: "; cin >> patId;
+        cout << "Enter Doctor ID: "; cin >> docId;
+        cin.ignore(); cout << "Enter Date (DD/MM/YYYY): "; getline(cin, date);
+    }
+    void save() {
+        ofstream f("appointments.txt", ios::app);
+        f << appId << "," << patId << "," << docId << "," << date << "\n";
+        f.close();
+        cout << "Appointment created.\n";
+    }
+};
+
+void viewFile(string filename, string header) {
+    ifstream f(filename);
+    string line;
+    cout << "\n--- " << header << " ---\n";
+    while (getline(f, line)) cout << line << "\n";
+    f.close();
+}
+
+int main() {
+    int ch;
+    do {
+        cout << "\n=== Hospital Management System ===\n";
+        cout << "1. Add Patient\n2. View Patients\n3. Add Doctor\n4. View Doctors\n";
+        cout << "5. Create Appointment\n6. View Appointments\n7. Exit\nChoice: ";
+        cin >> ch;
+        if (ch == 1) { Patient p; p.input(); p.save(); }
+        else if (ch == 2) viewFile("patients.txt", "All Patients");
+        else if (ch == 3) { Doctor d; d.input(); d.save(); }
+        else if (ch == 4) viewFile("doctors.txt", "All Doctors");
+        else if (ch == 5) { Appointment a; a.input(); a.save(); }
+        else if (ch == 6) viewFile("appointments.txt", "All Appointments");
+        else if (ch == 7) cout << "Goodbye!\n";
+        else cout << "Invalid choice.\n";
+    } while (ch != 7);
+    return 0;
+}
